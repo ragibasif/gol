@@ -71,6 +71,28 @@ class Board {
     }
 };
 
+class Life {
+
+  private:
+    Board *curr{};
+    Board *prev{};
+    int    rows{};
+    int    cols{};
+
+  public:
+    Life( const int rows, const int cols ) : rows( rows ), cols( cols ) {
+        curr = new Board( rows, cols );
+        prev = new Board( rows, cols );
+    }
+
+    ~Life() {
+        delete curr;
+        curr = nullptr;
+        delete prev;
+        prev = nullptr;
+    }
+};
+
 int main( [[maybe_unused]] int argc, [[maybe_unused]] char **argv ) {
 
     Board board( ROWS, COLS );
