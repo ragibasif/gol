@@ -1,4 +1,5 @@
 #include <iostream>
+#include <random>
 #include <vector>
 
 constexpr int ROWS = 1 << 5;
@@ -143,11 +144,33 @@ class Life {
             }
         }
     }
+
+    void random() {
+        // seed the generator with a hardware-based random device
+        std::random_device rd;
+        std::mt19937       gen( rd() );
+
+        // will uniformly choose between 0 and 1
+        std::uniform_int_distribution<> dis( 0, 1 );
+
+        // fill board randomly with 0 or 1
+        for ( int row = 0; row < rows; row++ ) {
+            for ( int col = 0; col < cols; col++ ) {
+                int value = dis( gen );
+                if ( value == 1 ) {
+                    prev->update( row, col, State::Alive );
+                } else {
+                    prev->update( row, col, State::Dead );
+                }
+            }
+        }
+    }
 };
 
 int main( [[maybe_unused]] int argc, [[maybe_unused]] char **argv ) {
 
     Life life( ROWS, COLS );
+    life.random();
     life.show();
     life.update();
     life.show();
