@@ -41,8 +41,20 @@ class Board {
         }
     }
 
+    void update( const int row, const int col, const State value ) {
+        matrix[mod( row, rows )][mod( col, cols )] = value;
+    }
+
     State retrieve( const int row, const int col ) {
         return matrix[mod( row, rows )][mod( col, cols )];
+    }
+
+    void toggle( const int row, const int col ) {
+        if ( retrieve( row, col ) == State::Dead ) {
+            update( row, col, State::Alive );
+        } else {
+            update( row, col, State::Dead );
+        }
     }
 
     void show() {
