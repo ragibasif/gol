@@ -5,7 +5,7 @@
 #include <vector>
 
 constexpr int ROWS = 1 << 5;
-constexpr int COLS = 1 << 5;
+constexpr int COLS = 1 << 6;
 
 enum class State { Dead = 0, Alive = 1 };
 
@@ -79,9 +79,9 @@ struct Pattern {
     std::vector< std::vector< int > > state;
 };
 
-Pattern block   = { 1, { { 1, 1 }, { 1, 1 } } };
-Pattern beehive = { 1, { { 0, 1, 1, 0 }, { 1, 0, 0, 1 }, { 0, 1, 1, 0 } } };
-Pattern loaf    = {
+Pattern block    = { 1, { { 1, 1 }, { 1, 1 } } };
+Pattern bee_hive = { 1, { { 0, 1, 1, 0 }, { 1, 0, 0, 1 }, { 0, 1, 1, 0 } } };
+Pattern loaf     = {
     1, { { 0, 1, 1, 0 }, { 1, 0, 0, 1 }, { 0, 1, 0, 1 }, { 0, 0, 1, 0 } } };
 Pattern boat    = { 1, { { 1, 1, 0 }, { 1, 0, 1 }, { 0, 1, 0 } } };
 Pattern tub     = { 1, { { 0, 1, 0 }, { 1, 0, 1 }, { 0, 1, 0 } } };
@@ -170,7 +170,7 @@ class Life {
                 if ( curr->retrieve( row, col ) == State::Alive ) {
                     output += "# ";
                 } else {
-                    output += ". ";
+                    output += "  ";
                 }
             }
             output += "\n";
@@ -238,8 +238,6 @@ class Life {
 
     void pattern( const std::vector< std::vector< int > > &state, const int row,
                   const int col ) {
-        prev->clear();
-        curr->clear();
         for ( int i = 0; i < static_cast< int >( state.size() ); i++ ) {
             for ( int j = 0; j < static_cast< int >( state[i].size() ); j++ ) {
                 int value = state[i][j];
@@ -256,25 +254,30 @@ class Life {
 
 namespace ansi {
 
-const std::string home  = "\033[H";  // move cursor to top-left
-const std::string clear = "\033[2J"; // clear screen
+[[maybe_unused]] const std::string home  = "\033[H";  // move cursor to top-left
+[[maybe_unused]] const std::string clear = "\033[2J"; // clear screen
+[[maybe_unused]] const std::string hide  = "\033[?25l"; // hide cursor
+[[maybe_unused]] const std::string show  = "\033[?25h"; // show cursor
 
-void reset() { std::cout << home << clear; }
+void reset() { std::cout << hide << home << clear; }
 
 } // namespace ansi
 
 int main( [[maybe_unused]] int argc, [[maybe_unused]] char **argv ) {
 
     Life life( ROWS, COLS );
-    // life.random();
+    life.random();
     life.pattern( hwss.state, ROWS / 2, COLS / 2 );
-    int iterations = hwss.period;
-    while ( iterations-- ) {
+    life.pattern( lwss.state, ROWS / 4, COLS / 3 );
+    life.pattern( mwss.state, ROWS / 3, COLS / 2 );
+    life.pattern( pulsar.state, ROWS / 6, COLS / 6 );
+    life.pattern( glider.state, ROWS / 5, COLS / 5 );
+    while ( true ) {
         ansi::reset();
         life.show();
         life.update();
         std::flush( std::cout ); // print everything immediately
-        std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
+        std::this_thread::sleep_for( std::chrono::milliseconds( 1000 ) );
     }
 
     return 0;

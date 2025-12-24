@@ -56,14 +56,14 @@
 #   Show                            Show the subsequent commands in the output
 
 Output demo.gif
-
-Require echo
+Output demo.mp4
+Output demo.webm
 
 Set Shell "bash"
-Set FontSize 32
-Set Width 1600
-Set Height 1600
+Set FontSize 28
+Set Width 2400
+Set Height 1200
 
 Type "make life" Sleep 500ms  Enter
 
-Sleep 5s
+Sleep 30s
