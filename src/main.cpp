@@ -1,5 +1,7 @@
+#include <chrono>
 #include <iostream>
 #include <random>
+#include <thread>
 #include <vector>
 
 constexpr int ROWS = 1 << 5;
@@ -167,13 +169,26 @@ class Life {
     }
 };
 
+namespace ansi {
+
+const std::string home  = "\033[H";  // move cursor to top-left
+const std::string clear = "\033[2J"; // clear screen
+
+void reset() { std::cout << home << clear; }
+
+} // namespace ansi
+
 int main( [[maybe_unused]] int argc, [[maybe_unused]] char **argv ) {
 
     Life life( ROWS, COLS );
     life.random();
-    life.show();
-    life.update();
-    life.show();
+    while ( true ) {
+        ansi::reset();
+        life.update();
+        life.show();
+        std::flush( std::cout ); // print everything immediately
+        std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
+    }
 
     return 0;
 }
