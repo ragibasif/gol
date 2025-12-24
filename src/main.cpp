@@ -1,8 +1,68 @@
 #include <iostream>
+#include <vector>
 
-int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
+constexpr int ROWS = 1 << 5;
+constexpr int COLS = 1 << 5;
 
-  std::cout << "Hello, World!\n";
+enum class State { Dead = 0, Alive = 1 };
 
-  return 0;
+class Board {
+  private:
+    int                                 rows{};
+    int                                 cols{};
+    std::vector< std::vector< State > > matrix{};
+
+    static int mod( const int a, const int b ) {
+        if ( b == 0 ) { // b == 0 is Undefined Behavior/Division by zero error
+            return 0;
+        }
+        if ( a == INT_MIN && b == -1 ) {
+            return 0; // mathematically 0 but UB because of overflow
+        }
+        int r = a % b;
+        if ( r < 0 ) { r += abs( b ); }
+        return r;
+    }
+
+  public:
+    Board( int rows, int cols ) : rows( rows ), cols( cols ) {
+        for ( int row = 0; row < rows; row++ ) { matrix.emplace_back( cols ); }
+    }
+
+    void set() {
+        for ( auto &row : matrix ) {
+            fill( row.begin(), row.end(), State::Alive );
+        }
+    }
+
+    void clear() {
+        for ( auto &row : matrix ) {
+            fill( row.begin(), row.end(), State::Dead );
+        }
+    }
+
+    State retrieve( const int row, const int col ) {
+        return matrix[mod( row, rows )][mod( col, cols )];
+    }
+
+    void show() {
+        for ( int row = 0; row < rows; row++ ) {
+            for ( int col = 0; col < cols; col++ ) {
+                if ( retrieve( row, col ) == State::Alive ) {
+                    std::cout << 1;
+                } else {
+                    std::cout << 0;
+                }
+            }
+            std::cout << "\n";
+        }
+    }
+};
+
+int main( [[maybe_unused]] int argc, [[maybe_unused]] char **argv ) {
+
+    Board board( ROWS, COLS );
+    board.show();
+
+    return 0;
 }
