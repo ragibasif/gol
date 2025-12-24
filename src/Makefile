@@ -21,6 +21,10 @@ run:
 	@./main
 	@make clean
 
+.PHONY: life
+life:
+	@make run
+
 .PHONY: clean
 clean:
 	@rm -rf main main.o main.s
