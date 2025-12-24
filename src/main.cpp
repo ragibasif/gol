@@ -107,11 +107,49 @@ class Life {
 
         std::cout << output;
     }
+
+    void update() {
+        for ( int row = 0; row < rows; row++ ) {
+            for ( int col = 0; col < cols; col++ ) {
+
+                int count = 0;
+                // neighbors
+                for ( int i = -1; i <= 1; i++ ) {
+                    for ( int j = -1; j <= 1; j++ ) {
+                        if ( prev->retrieve( row + i, col + j ) ==
+                             State::Alive ) {
+                            count++;
+                        }
+                    }
+                }
+
+                if ( prev->retrieve( row, col ) == State::Alive ) {
+                    if ( count < 2 ) {
+                        curr->update( row, col, State::Dead );
+                    } else if ( count > 3 ) {
+                        curr->update( row, col, State::Dead );
+                    }
+                } else {
+                    if ( count == 3 ) {
+                        curr->update( row, col, State::Alive );
+                    }
+                }
+            }
+        }
+
+        for ( int row = 0; row < rows; row++ ) {
+            for ( int col = 0; col < cols; col++ ) {
+                prev->update( row, col, curr->retrieve( row, col ) );
+            }
+        }
+    }
 };
 
 int main( [[maybe_unused]] int argc, [[maybe_unused]] char **argv ) {
 
     Life life( ROWS, COLS );
+    life.show();
+    life.update();
     life.show();
 
     return 0;
