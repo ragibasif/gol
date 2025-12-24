@@ -91,12 +91,28 @@ class Life {
         delete prev;
         prev = nullptr;
     }
+
+    void show() {
+        std::string output = "";
+        for ( int row = 0; row < rows; row++ ) {
+            for ( int col = 0; col < cols; col++ ) {
+                if ( curr->retrieve( row, col ) == State::Alive ) {
+                    output += "X ";
+                } else {
+                    output += ". ";
+                }
+            }
+            output += "\n";
+        }
+
+        std::cout << output;
+    }
 };
 
 int main( [[maybe_unused]] int argc, [[maybe_unused]] char **argv ) {
 
-    Board board( ROWS, COLS );
-    board.show();
+    Life life( ROWS, COLS );
+    life.show();
 
     return 0;
 }
