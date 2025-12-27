@@ -143,14 +143,6 @@ class Life {
     int    rows{};
     int    cols{};
 
-    void copy() {
-        for ( int row = 0; row < rows; row++ ) {
-            for ( int col = 0; col < cols; col++ ) {
-                curr->update( row, col, prev->retrieve( row, col ) );
-            }
-        }
-    }
-
   public:
     Life( const int rows, const int cols ) : rows( rows ), cols( cols ) {
         curr = new Board( rows, cols );
@@ -249,7 +241,7 @@ class Life {
                 }
             }
         }
-        copy();
+        std::swap( curr, prev );
     }
 };
 
