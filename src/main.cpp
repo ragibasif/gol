@@ -138,22 +138,15 @@ Pattern hwss           = { 20,
 class Life {
 
   private:
-    Board *curr{};
-    Board *prev{};
-    int    rows{};
-    int    cols{};
+    std::unique_ptr< Board > curr;
+    std::unique_ptr< Board > prev;
+    int                      rows{};
+    int                      cols{};
 
   public:
     Life( const int rows, const int cols ) : rows( rows ), cols( cols ) {
-        curr = new Board( rows, cols );
-        prev = new Board( rows, cols );
-    }
-
-    ~Life() {
-        delete curr;
-        curr = nullptr;
-        delete prev;
-        prev = nullptr;
+        curr = std::make_unique< Board >( rows, cols );
+        prev = std::make_unique< Board >( rows, cols );
     }
 
     void show() {
