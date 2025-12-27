@@ -28,34 +28,32 @@ class Board {
         for ( int row = 0; row < rows; row++ ) { matrix.emplace_back( cols ); }
     }
 
-    void set() {
-        for ( auto &row : matrix ) { fill( row.begin(), row.end(), true ); }
+    void fill( bool state ) {
+        for ( auto &row : matrix ) {
+            std::fill( row.begin(), row.end(), state );
+        }
     }
 
-    void clear() {
-        for ( auto &row : matrix ) { fill( row.begin(), row.end(), false ); }
-    }
-
-    void update( const int row, const int col, const bool value ) {
+    void set( const int row, const int col, const bool value ) {
         matrix[mod( row, rows )][mod( col, cols )] = value;
     }
 
-    bool retrieve( const int row, const int col ) {
+    bool get( const int row, const int col ) {
         return matrix[mod( row, rows )][mod( col, cols )];
     }
 
     void toggle( const int row, const int col ) {
-        if ( retrieve( row, col ) == false ) {
-            update( row, col, true );
+        if ( get( row, col ) == false ) {
+            set( row, col, true );
         } else {
-            update( row, col, false );
+            set( row, col, false );
         }
     }
 
     void show() {
         for ( int row = 0; row < rows; row++ ) {
             for ( int col = 0; col < cols; col++ ) {
-                if ( retrieve( row, col ) == true ) {
+                if ( get( row, col ) == true ) {
                     std::cout << 1;
                 } else {
                     std::cout << 0;
@@ -144,7 +142,7 @@ class Life {
         std::string output = "";
         for ( int row = 0; row < rows; row++ ) {
             for ( int col = 0; col < cols; col++ ) {
-                if ( curr->retrieve( row, col ) == true ) {
+                if ( curr->get( row, col ) == true ) {
                     output += "# ";
                 } else {
                     output += "  ";
@@ -164,27 +162,27 @@ class Life {
                 // neighbors
                 for ( int i = -1; i <= 1; i++ ) {
                     for ( int j = -1; j <= 1; j++ ) {
-                        if ( prev->retrieve( row + i, col + j ) == true ) {
+                        if ( prev->get( row + i, col + j ) == true ) {
                             count++;
                         }
                     }
                 }
 
-                if ( prev->retrieve( row, col ) == true ) {
+                if ( prev->get( row, col ) == true ) {
                     if ( count < 2 ) {
-                        curr->update( row, col, false );
+                        curr->set( row, col, false );
                     } else if ( count > 3 ) {
-                        curr->update( row, col, false );
+                        curr->set( row, col, false );
                     }
                 } else {
-                    if ( count == 3 ) { curr->update( row, col, true ); }
+                    if ( count == 3 ) { curr->set( row, col, true ); }
                 }
             }
         }
 
         for ( int row = 0; row < rows; row++ ) {
             for ( int col = 0; col < cols; col++ ) {
-                prev->update( row, col, curr->retrieve( row, col ) );
+                prev->set( row, col, curr->get( row, col ) );
             }
         }
     }
@@ -202,9 +200,9 @@ class Life {
             for ( int col = 0; col < cols; col++ ) {
                 int value = dis( gen );
                 if ( value == 1 ) {
-                    prev->update( row, col, true );
+                    prev->set( row, col, true );
                 } else {
-                    prev->update( row, col, false );
+                    prev->set( row, col, false );
                 }
             }
         }
@@ -216,9 +214,9 @@ class Life {
             for ( int j = 0; j < static_cast< int >( state[i].size() ); j++ ) {
                 int value = state[i][j];
                 if ( value == 1 ) {
-                    prev->update( row + i, col + j, true );
+                    prev->set( row + i, col + j, true );
                 } else {
-                    prev->update( row + i, col + j, false );
+                    prev->set( row + i, col + j, false );
                 }
             }
         }
