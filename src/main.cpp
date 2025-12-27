@@ -24,11 +24,11 @@ class Board {
     }
 
   public:
-    Board( int rows, int cols ) : rows( rows ), cols( cols ) {
+    Board( const int rows, const int cols ) : rows( rows ), cols( cols ) {
         for ( int row = 0; row < rows; row++ ) { matrix.emplace_back( cols ); }
     }
 
-    void fill( bool state ) {
+    void fill( const bool state ) {
         for ( auto &row : matrix ) {
             std::fill( row.begin(), row.end(), state );
         }
@@ -38,7 +38,7 @@ class Board {
         matrix[mod( row, rows )][mod( col, cols )] = value;
     }
 
-    bool get( const int row, const int col ) {
+    bool get( const int row, const int col ) const {
         return matrix[mod( row, rows )][mod( col, cols )];
     }
 
@@ -59,7 +59,7 @@ class Board {
                     std::cout << 0;
                 }
             }
-            std::cout << "\n";
+            std::cout << '\n';
         }
     }
 };
@@ -148,7 +148,7 @@ class Life {
                     output += "  ";
                 }
             }
-            output += "\n";
+            output += '\n';
         }
 
         std::cout << output;
