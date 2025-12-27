@@ -5,9 +5,6 @@
 #include <thread>
 #include <vector>
 
-constexpr int ROWS = 1 << 5;
-constexpr int COLS = 1 << 6;
-
 enum class State { Dead = 0, Alive = 1 };
 
 class Board {
@@ -249,15 +246,18 @@ void reset() { std::cout << hide << home << clear; }
 
 } // namespace ansi
 
-int main( [[maybe_unused]] int argc, [[maybe_unused]] char **argv ) {
+int main() {
 
-    Life life( ROWS, COLS );
+    constexpr int rows = 1 << 5;
+    constexpr int cols = 1 << 6;
+
+    Life life( rows, cols );
     life.random();
-    life.pattern( hwss.state, ROWS / 2, COLS / 2 );
-    life.pattern( lwss.state, ROWS / 4, COLS / 3 );
-    life.pattern( mwss.state, ROWS / 3, COLS / 2 );
-    life.pattern( pulsar.state, ROWS / 6, COLS / 6 );
-    life.pattern( glider.state, ROWS / 5, COLS / 5 );
+    life.pattern( hwss.state, rows / 2, cols / 2 );
+    life.pattern( lwss.state, rows / 4, cols / 3 );
+    life.pattern( mwss.state, rows / 3, cols / 2 );
+    life.pattern( pulsar.state, rows / 6, cols / 6 );
+    life.pattern( glider.state, rows / 5, cols / 5 );
     while ( true ) {
         ansi::reset();
         life.show();
@@ -265,6 +265,4 @@ int main( [[maybe_unused]] int argc, [[maybe_unused]] char **argv ) {
         std::flush( std::cout ); // print everything immediately
         std::this_thread::sleep_for( std::chrono::milliseconds( 1000 ) );
     }
-
-    return 0;
 }
