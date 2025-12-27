@@ -5,13 +5,11 @@
 #include <thread>
 #include <vector>
 
-enum class State { Dead = 0, Alive = 1 };
-
 class Board {
   private:
-    int                                 rows{};
-    int                                 cols{};
-    std::vector< std::vector< State > > matrix{};
+    int                                rows{};
+    int                                cols{};
+    std::vector< std::vector< bool > > matrix{};
 
     static int mod( const int a, const int b ) {
         if ( b == 0 ) { // b == 0 is Undefined Behavior/Division by zero error
@@ -31,37 +29,33 @@ class Board {
     }
 
     void set() {
-        for ( auto &row : matrix ) {
-            fill( row.begin(), row.end(), State::Alive );
-        }
+        for ( auto &row : matrix ) { fill( row.begin(), row.end(), true ); }
     }
 
     void clear() {
-        for ( auto &row : matrix ) {
-            fill( row.begin(), row.end(), State::Dead );
-        }
+        for ( auto &row : matrix ) { fill( row.begin(), row.end(), false ); }
     }
 
-    void update( const int row, const int col, const State value ) {
+    void update( const int row, const int col, const bool value ) {
         matrix[mod( row, rows )][mod( col, cols )] = value;
     }
 
-    State retrieve( const int row, const int col ) {
+    bool retrieve( const int row, const int col ) {
         return matrix[mod( row, rows )][mod( col, cols )];
     }
 
     void toggle( const int row, const int col ) {
-        if ( retrieve( row, col ) == State::Dead ) {
-            update( row, col, State::Alive );
+        if ( retrieve( row, col ) == false ) {
+            update( row, col, true );
         } else {
-            update( row, col, State::Dead );
+            update( row, col, false );
         }
     }
 
     void show() {
         for ( int row = 0; row < rows; row++ ) {
             for ( int col = 0; col < cols; col++ ) {
-                if ( retrieve( row, col ) == State::Alive ) {
+                if ( retrieve( row, col ) == true ) {
                     std::cout << 1;
                 } else {
                     std::cout << 0;
@@ -150,7 +144,7 @@ class Life {
         std::string output = "";
         for ( int row = 0; row < rows; row++ ) {
             for ( int col = 0; col < cols; col++ ) {
-                if ( curr->retrieve( row, col ) == State::Alive ) {
+                if ( curr->retrieve( row, col ) == true ) {
                     output += "# ";
                 } else {
                     output += "  ";
@@ -170,23 +164,20 @@ class Life {
                 // neighbors
                 for ( int i = -1; i <= 1; i++ ) {
                     for ( int j = -1; j <= 1; j++ ) {
-                        if ( prev->retrieve( row + i, col + j ) ==
-                             State::Alive ) {
+                        if ( prev->retrieve( row + i, col + j ) == true ) {
                             count++;
                         }
                     }
                 }
 
-                if ( prev->retrieve( row, col ) == State::Alive ) {
+                if ( prev->retrieve( row, col ) == true ) {
                     if ( count < 2 ) {
-                        curr->update( row, col, State::Dead );
+                        curr->update( row, col, false );
                     } else if ( count > 3 ) {
-                        curr->update( row, col, State::Dead );
+                        curr->update( row, col, false );
                     }
                 } else {
-                    if ( count == 3 ) {
-                        curr->update( row, col, State::Alive );
-                    }
+                    if ( count == 3 ) { curr->update( row, col, true ); }
                 }
             }
         }
@@ -211,9 +202,9 @@ class Life {
             for ( int col = 0; col < cols; col++ ) {
                 int value = dis( gen );
                 if ( value == 1 ) {
-                    prev->update( row, col, State::Alive );
+                    prev->update( row, col, true );
                 } else {
-                    prev->update( row, col, State::Dead );
+                    prev->update( row, col, false );
                 }
             }
         }
@@ -225,9 +216,9 @@ class Life {
             for ( int j = 0; j < static_cast< int >( state[i].size() ); j++ ) {
                 int value = state[i][j];
                 if ( value == 1 ) {
-                    prev->update( row + i, col + j, State::Alive );
+                    prev->update( row + i, col + j, true );
                 } else {
-                    prev->update( row + i, col + j, State::Dead );
+                    prev->update( row + i, col + j, false );
                 }
             }
         }
