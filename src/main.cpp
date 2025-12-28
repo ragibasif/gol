@@ -162,7 +162,8 @@ class Life {
                 // neighbors
                 for ( int i = -1; i <= 1; i++ ) {
                     for ( int j = -1; j <= 1; j++ ) {
-                        if ( prev->get( row + i, col + j ) == true ) {
+                        if ( !( i == 0 && j == 0 ) &&
+                             ( prev->get( row + i, col + j ) == true ) ) {
                             count++;
                         }
                     }
