@@ -238,16 +238,12 @@ void reset() { std::cout << hide << home << clear; }
 
 int main() {
 
-    constexpr int rows = 1 << 5;
-    constexpr int cols = 1 << 6;
+    constexpr int rows = ( 1 << 5 );
+    constexpr int cols = ( 1 << 5 );
 
     Life life( rows, cols );
-    life.random();
-    life.pattern( hwss.state, rows / 2, cols / 2 );
-    life.pattern( lwss.state, rows / 4, cols / 3 );
-    life.pattern( mwss.state, rows / 3, cols / 2 );
-    life.pattern( pulsar.state, rows / 6, cols / 6 );
-    life.pattern( glider.state, rows / 5, cols / 5 );
+    // life.random();
+    life.pattern( pulsar.state, rows / 2, cols / 2 );
     while ( true ) {
         ansi::reset();
         life.show();
